@@ -1,0 +1,7 @@
+{
+  "name": "multi-web-chat",
+  "version": "0.0.0",
+  "devDependencies": {
+    "prettier": "^3.9.6"
+  }
+}

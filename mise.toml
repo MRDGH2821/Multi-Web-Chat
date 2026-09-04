@@ -1,0 +1,42 @@
+[env]
+HK_MISE = 1
+
+[hooks]
+# Automatically install/update hooks when tools are installed
+postinstall = ["hk install --mise"]
+
+[tasks]
+ai-setup = "apm install"
+check = ["hk check --all"]
+cspell = "cspell ."
+fmt = ["hk fix --all", "treefmt"]
+pre-commit = "hk run pre-commit"
+prepare = ["bun install"]
+
+[tools]
+apm = { postinstall = "apm install", version = "latest" }
+"aqua:google/keep-sorted" = "latest"
+"aqua:numtide/treefmt" = "latest"
+"aqua:owenlamont/ryl" = "latest"
+betterleaks = "latest"
+bun = { postinstall = "bun install", version = "latest" }
+cocogitto = "latest"
+cspell = "latest"
+git-cliff = "latest"
+hk = "latest"
+ls-lint = "latest"
+"npm:sort-package-json" = "latest"
+"pipx:yamlfix" = "latest"
+pkl = "latest"
+prettier = "latest"
+ruff = "latest"
+rumdl = "latest"
+tombi = "latest"
+typos = "latest"
+typstyle = "latest"
+uv = "latest"
+yq = "latest"
+
+[[watch_files]]
+patterns = ["apm.yml"]
+task = "ai-setup"

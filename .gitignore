@@ -1,0 +1,35 @@
+# agents
+.agent/skills
+.agents/mcp_config.json
+.agents/skills
+.claude/skills
+.cursor/mcp.json
+.cursor/skills
+.github/skills
+.mcp.json
+.opencode/skills
+.vscode/mcp.json
+apm_modules/
+opencode.json
+
+# env files
+.env
+.env.*
+!.env.sample
+
+# others
+*.local
+.DS_Store
+.devenv
+.direnv
+.git
+.pre-commit-config.yaml
+.svn
+.venv/
+__MACOSX
+__pycache__
+dist/
+megalinter-reports/
+node_modules/
+report/
+target/

@@ -1,0 +1,17 @@
+{
+  "gitignore": true,
+  "ignore": [
+    "**/*.svg",
+    "**/*cache*/**",
+    "**/.git/**",
+    "**/.github/**",
+    "**/.idea/**",
+    "**/.rbenv/**",
+    "**/.venv/**",
+    "**/node_modules/**",
+    "**/report/**",
+    "template/**"
+  ],
+  "reporters": ["html", "markdown"],
+  "threshold": 0
+}
