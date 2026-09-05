@@ -1,4 +1,6 @@
-export const PROVIDERS: { id: string; label: string }[] = [
+import type { ProviderId } from "./types";
+
+export const PROVIDERS: { id: ProviderId; label: string }[] = [
   { id: "chatgpt", label: "ChatGPT" },
   { id: "claude", label: "Claude" },
   { id: "gemini", label: "Gemini" },
