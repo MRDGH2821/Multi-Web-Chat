@@ -6,7 +6,7 @@ mod registry;
 mod shell;
 mod status;
 
-use commands::{get_prefs, get_providers, set_provider_enabled};
+use commands::{get_prefs, get_providers, new_chat_all, send_prompt, set_provider_enabled};
 use shell::create_main_shell;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -15,7 +15,9 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             get_providers,
             get_prefs,
-            set_provider_enabled
+            set_provider_enabled,
+            send_prompt,
+            new_chat_all
         ])
         .setup(|app| {
             create_main_shell(app.handle())?;

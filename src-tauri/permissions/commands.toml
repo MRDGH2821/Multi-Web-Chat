@@ -1,14 +1,24 @@
 [[permission]]
-identifier = "allow-get-providers"
 description = "Allow the get_providers command"
+identifier = "allow-get-providers"
 commands.allow = ["get_providers"]
 
 [[permission]]
-identifier = "allow-get-prefs"
 description = "Allow the get_prefs command"
+identifier = "allow-get-prefs"
 commands.allow = ["get_prefs"]
 
 [[permission]]
-identifier = "allow-set-provider-enabled"
 description = "Allow the set_provider_enabled command"
+identifier = "allow-set-provider-enabled"
 commands.allow = ["set_provider_enabled"]
+
+[[permission]]
+description = "Allow the send_prompt command"
+identifier = "allow-send-prompt"
+commands.allow = ["send_prompt"]
+
+[[permission]]
+description = "Allow the new_chat_all command"
+identifier = "allow-new-chat-all"
+commands.allow = ["new_chat_all"]

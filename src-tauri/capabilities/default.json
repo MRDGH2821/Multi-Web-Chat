@@ -8,7 +8,9 @@
     "core:webview:default",
     "allow-get-providers",
     "allow-get-prefs",
-    "allow-set-provider-enabled"
+    "allow-set-provider-enabled",
+    "allow-send-prompt",
+    "allow-new-chat-all"
   ],
   "webviews": ["chrome"],
   "windows": ["main"]

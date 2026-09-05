@@ -1,3 +1,5 @@
+use serde::Deserialize;
+use tauri::{AppHandle, Manager};
 use thiserror::Error;
 
 #[derive(Debug, Error, PartialEq, Eq)]
@@ -53,9 +55,158 @@ pub fn call_new_chat_js() -> String {
     .into()
 }
 
+/// Trims `text` and returns `None` for an empty (or whitespace-only) prompt,
+/// so callers can treat it as a no-op without touching pane status.
+pub fn normalize_prompt(text: &str) -> Option<String> {
+    let t = text.trim();
+    if t.is_empty() {
+        None
+    } else {
+        Some(t.to_string())
+    }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct LastResult {
+    pub ok: bool,
+    pub error: Option<String>,
+}
+
+/// Runs `setPrompt` + `submit` on the pane's adapter and awaits the
+/// `window.__mwcLastResult` bridge for success/failure.
+pub async fn run_send(app: &AppHandle, id: &str, text: &str) -> Result<(), String> {
+    let webview = app
+        .get_webview(id)
+        .ok_or_else(|| format!("webview {id} missing"))?;
+    webview
+        .eval("window.__mwcLastResult = null;")
+        .map_err(|e| e.to_string())?;
+    let js = format!(
+        r#"(async()=>{{
+  try {{
+    const a=window.__mwcAdapter;
+    if(!a) throw new Error('adapter missing');
+    await a.setPrompt({text});
+    await a.submit();
+    window.__mwcLastResult = {{ ok: true }};
+  }} catch(e) {{
+    window.__mwcLastResult = {{ ok: false, error: String(e && e.message || e) }};
+  }}
+}})()"#,
+        text = serde_json::to_string(text).unwrap()
+    );
+    webview.eval(&js).map_err(|e| e.to_string())?;
+    let result = poll_last_result(&webview, std::time::Duration::from_secs(30)).await?;
+    if result.ok {
+        Ok(())
+    } else {
+        Err(result.error.unwrap_or_else(|| "unknown adapter error".into()))
+    }
+}
+
+/// Runs `newChat` on the pane's adapter and awaits the
+/// `window.__mwcLastResult` bridge for success/failure.
+pub async fn run_new_chat(app: &AppHandle, id: &str) -> Result<(), String> {
+    let webview = app
+        .get_webview(id)
+        .ok_or_else(|| format!("webview {id} missing"))?;
+    webview
+        .eval("window.__mwcLastResult = null;")
+        .map_err(|e| e.to_string())?;
+    webview
+        .eval(
+            r#"(async()=>{
+  try {
+    const a=window.__mwcAdapter;
+    if(!a) throw new Error('adapter missing');
+    await a.newChat();
+    window.__mwcLastResult = { ok: true };
+  } catch(e) {
+    window.__mwcLastResult = { ok: false, error: String(e && e.message || e) };
+  }
+})()"#,
+        )
+        .map_err(|e| e.to_string())?;
+    let result = poll_last_result(&webview, std::time::Duration::from_secs(30)).await?;
+    if result.ok {
+        Ok(())
+    } else {
+        Err(result.error.unwrap_or_else(|| "unknown adapter error".into()))
+    }
+}
+
+/// Linux: read `window.__mwcLastResult` via webkit2gtk `evaluate_javascript`,
+/// polling until the adapter bridge sets it (or `timeout` elapses).
+pub async fn poll_last_result(
+    webview: &tauri::Webview,
+    timeout: std::time::Duration,
+) -> Result<LastResult, String> {
+    let start = std::time::Instant::now();
+    loop {
+        if start.elapsed() > timeout {
+            return Err("adapter timed out".into());
+        }
+        let (tx, rx) = std::sync::mpsc::channel::<Result<Option<String>, String>>();
+        webview
+            .with_webview({
+                let tx = tx;
+                move |w| {
+                    #[cfg(target_os = "linux")]
+                    {
+                        use webkit2gtk::WebViewExt;
+                        let tx = tx.clone();
+                        w.inner().evaluate_javascript(
+                            "window.__mwcLastResult ? JSON.stringify(window.__mwcLastResult) : null",
+                            None,
+                            None,
+                            None::<&webkit2gtk::gio::Cancellable>,
+                            move |res| {
+                                let mapped = res
+                                    .map_err(|e| e.to_string())
+                                    .map(|value| value.to_string());
+                                let _ = tx.send(mapped.map(|s| {
+                                    if s == "null" || s.is_empty() {
+                                        None
+                                    } else {
+                                        Some(s)
+                                    }
+                                }));
+                            },
+                        );
+                    }
+                    #[cfg(not(target_os = "linux"))]
+                    {
+                        let _ = tx.send(Err("multi-web-chat v1 supports Linux only".into()));
+                    }
+                }
+            })
+            .map_err(|e| e.to_string())?;
+
+        match rx.recv_timeout(std::time::Duration::from_millis(200)) {
+            Ok(Ok(Some(raw))) => {
+                let parsed = serde_json::from_str::<LastResult>(&raw).map_err(|e| e.to_string())?;
+                return Ok(parsed);
+            }
+            Ok(Ok(None)) => {
+                tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+            }
+            Ok(Err(e)) => return Err(e),
+            Err(_) => {
+                tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn empty_prompt_is_noop_guard() {
+        assert!(normalize_prompt("  \n\t ").is_none());
+        assert_eq!(normalize_prompt("hello").as_deref(), Some("hello"));
+    }
 
     #[test]
     fn set_prompt_js_escapes_quotes_and_newlines() {
