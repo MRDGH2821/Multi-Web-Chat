@@ -1,0 +1,17 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "description": "Chrome webview capabilities",
+  "identifier": "default",
+  "permissions": [
+    "core:default",
+    "core:event:default",
+    "core:webview:default",
+    "allow-get-providers",
+    "allow-get-prefs",
+    "allow-set-provider-enabled",
+    "allow-send-prompt",
+    "allow-new-chat-all"
+  ],
+  "webviews": ["chrome"],
+  "windows": ["main"]
+}
