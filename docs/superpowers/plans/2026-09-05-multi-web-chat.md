@@ -6,7 +6,7 @@
 
 **Architecture:** One main `Window` hosts a bottom chrome child webview (Svelte UI) plus zero-to-seven provider child webviews created/destroyed by Rust. Layout math runs in Rust on resize/toggle. Chrome talks to Rust via Tauri commands/events; Rust drives provider pages by `eval` of local adapter scripts that expose `window.__mwcAdapter`.
 
-**Tech Stack:** Tauri 2.x (`unstable` for multiwebview), Rust 1.77+, Svelte 5 + Vite + TypeScript, Bun, WebKitGTK on Linux; package AppImage / `.deb` / `.rpm`.
+**Tech Stack:** Tauri 2.x (`unstable` for multiwebview), latest stable Rust, Svelte 5 + Vite + TypeScript, Bun, WebKitGTK on Linux; package AppImage / `.deb` / `.rpm`. Always install the latest published versions of npm packages, crates, and rustc — plan snippets that show older version numbers are shape examples, not pins.
 
 ## Global Constraints
 
@@ -26,6 +26,7 @@
 - Linux risk: child webview absolute positioning has historically been broken (GTK `Box` packing). Task 5 includes a hard positioning smoke gate before building features on top.
 - Commits: Conventional Commits; AI commits include `Co-authored-by: Composer via Cursor <cursoragent@cursor.com>`; log work in `.agents/logs/YYYY-MM-DD.md`.
 - Package manager: Bun (existing repo). Prefer `mise` for tool versions.
+- Dependency versions: use the latest published stable of every npm package, crate, and rustc. Never install a lower major/minor because a plan snippet shows an older number.
 
 ---
 
@@ -1625,14 +1626,15 @@ Concrete structure:
     setProviderEnabled,
     type PaneStatusPayload,
     type Prefs,
-    type ProviderDto,
+    type ProviderDto
   } from "./lib/tauri";
   import type { PaneStatus } from "./lib/types";
 
   let providers: ProviderDto[] = $state([]);
   let prefs: Prefs = $state({ enabled: {} });
   let prompt = $state("");
-  let statuses: Record<string, { status: PaneStatus; message?: string }> = $state({});
+  let statuses: Record<string, { status: PaneStatus; message?: string }> =
+    $state({});
 
   onMount(() => {
     let unlisten: (() => void) | undefined;
@@ -1642,7 +1644,7 @@ Concrete structure:
       unlisten = await onPaneStatus((p: PaneStatusPayload) => {
         statuses[p.id] = {
           status: p.status,
-          message: p.message ?? undefined,
+          message: p.message ?? undefined
         };
         statuses = statuses;
       });
@@ -1693,8 +1695,7 @@ Concrete structure:
       bind:value={prompt}
       onkeydown={onKeydown}
       placeholder="Prompt all enabled providers"
-      rows="2"
-    ></textarea>
+      rows="2"></textarea>
     <button type="button" onclick={onSend}>Send</button>
     <button type="button" onclick={() => newChatAll()}>New</button>
     <button type="button" onclick={onClear}>Clear</button>
@@ -1705,7 +1706,12 @@ Concrete structure:
     {:else}
       {#each providers as p}
         {#if prefs.enabled[p.id] !== false}
-          <span>{p.label}: {statuses[p.id]?.status ?? "idle"}{statuses[p.id]?.message ? ` — ${statuses[p.id].message}` : ""}</span>
+          <span
+            >{p.label}: {statuses[p.id]?.status ?? "idle"}{statuses[p.id]
+              ?.message
+              ? ` — ${statuses[p.id].message}`
+              : ""}</span
+          >
         {/if}
       {/each}
     {/if}

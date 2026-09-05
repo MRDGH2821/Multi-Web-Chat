@@ -25,6 +25,7 @@ opencode.json
 .direnv
 .git
 .pre-commit-config.yaml
+.svelte-check/
 .svn
 .venv/
 __MACOSX
