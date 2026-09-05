@@ -1,6 +1,6 @@
 (() => {
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-  async function waitFor(sel, timeout = 8000) {
+  async function waitFor(sel, timeout = 12000) {
     const start = Date.now();
     while (Date.now() - start < timeout) {
       const el = document.querySelector(sel);
@@ -10,14 +10,26 @@
     throw new Error(`timeout waiting for ${sel}`);
   }
   window.__mwcAdapter = {
-    async setPrompt(_text) {
-      throw new Error("stub: deepseek selectors not implemented");
+    async setPrompt(text) {
+      const el = await waitFor('textarea, div[contenteditable="true"]');
+      el.focus();
+      if ("value" in el) el.value = text;
+      else el.textContent = text;
+      el.dispatchEvent(new InputEvent("input", { bubbles: true }));
     },
     async submit() {
-      throw new Error("stub: deepseek selectors not implemented");
+      const btn =
+        document.querySelector('div[role="button"][aria-label*="Send"]') ||
+        document.querySelector('button[aria-label*="Send"]');
+      if (!btn) throw new Error("deepseek: send button not found");
+      btn.click();
     },
     async newChat() {
-      throw new Error("stub: deepseek selectors not implemented");
+      const btn =
+        document.querySelector('div[role="button"][aria-label*="New"]') ||
+        document.querySelector('button[aria-label*="New"]');
+      if (!btn) throw new Error("deepseek: new chat not found");
+      btn.click();
     }
   };
 })();

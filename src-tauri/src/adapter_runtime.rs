@@ -226,16 +226,10 @@ mod tests {
     }
 
     #[test]
-    fn load_adapter_source_stubs_remain_for_task_11_providers() {
-        for id in ["zai", "deepseek", "grok"] {
-            let src = load_adapter_source(id).expect("known provider");
-            assert!(src.contains(&format!("stub: {id} selectors not implemented")));
-        }
-    }
-
-    #[test]
     fn load_adapter_source_real_providers_have_no_stub_marker() {
-        for id in ["chatgpt", "claude", "gemini", "copilot"] {
+        for id in [
+            "chatgpt", "claude", "gemini", "copilot", "zai", "deepseek", "grok",
+        ] {
             let src = load_adapter_source(id).expect("known provider");
             assert!(!src.contains("stub:"));
         }
