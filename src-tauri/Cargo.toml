@@ -23,6 +23,13 @@ tempfile = "3"
 [build-dependencies]
 tauri-build = { version = "2.6.3", features = [] }
 
+# Vendored fixes for tauri-apps/tauri#15704 and tauri-apps/wry#1745 (Linux
+# gtk::Box packing bug that ignores add_child position/size). Remove once
+# these land in a released tauri-runtime-wry/wry version.
+[patch.crates-io]
+tauri-runtime-wry = { path = "../vendor/tauri-runtime-wry-2.11.4" }
+wry = { path = "../vendor/wry-0.55.1" }
+
 [profile.release]
 lto = true
 panic = "abort"

@@ -4,7 +4,7 @@ use crate::registry::all_providers;
 use std::path::PathBuf;
 use std::sync::Mutex;
 use tauri::{
-    webview::WebviewBuilder, AppHandle, LogicalPosition, LogicalSize, Manager, WebviewUrl,
+    webview::WebviewBuilder, AppHandle, LogicalPosition, LogicalSize, Manager, Rect, WebviewUrl,
     WindowEvent,
 };
 
@@ -88,8 +88,16 @@ pub fn reflow(app: &AppHandle) -> tauri::Result<()> {
     let plan = compute_layout(width, height, chrome_height, &enabled_ids);
 
     if let Some(chrome) = app.get_webview(CHROME_LABEL) {
-        chrome.set_position(LogicalPosition::new(plan.chrome.x, plan.chrome.y))?;
-        chrome.set_size(LogicalSize::new(plan.chrome.width, plan.chrome.height))?;
+        // Set position and size atomically via `set_bounds`. Calling
+        // `set_position`/`set_size` separately is racy on Linux: each call
+        // reads the webview's *current* bounds via a live X11 query (which
+        // only reflects the previous GTK size-allocate pass) and merges in
+        // the new field, so the second call can clobber the first call's
+        // change with a stale value before GTK has re-allocated the widget.
+        chrome.set_bounds(Rect {
+            position: LogicalPosition::new(plan.chrome.x, plan.chrome.y).into(),
+            size: LogicalSize::new(plan.chrome.width, plan.chrome.height).into(),
+        })?;
     }
 
     let living = state.living.lock().expect("living poisoned");
@@ -98,8 +106,10 @@ pub fn reflow(app: &AppHandle) -> tauri::Result<()> {
             continue;
         }
         if let Some(webview) = app.get_webview(id) {
-            webview.set_position(LogicalPosition::new(rect.x, rect.y))?;
-            webview.set_size(LogicalSize::new(rect.width, rect.height))?;
+            webview.set_bounds(Rect {
+                position: LogicalPosition::new(rect.x, rect.y).into(),
+                size: LogicalSize::new(rect.width, rect.height).into(),
+            })?;
         }
     }
 
