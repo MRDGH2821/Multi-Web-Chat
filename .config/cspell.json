@@ -29,6 +29,8 @@
     "devenv",
     "Dioxus",
     "direnv",
+    "dpkg",
+    "fusermount",
     "libayatana",
     "librsvg",
     "mpsc",
