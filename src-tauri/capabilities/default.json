@@ -2,7 +2,14 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "description": "Chrome webview capabilities",
   "identifier": "default",
-  "permissions": ["core:default", "core:event:default", "core:webview:default"],
+  "permissions": [
+    "core:default",
+    "core:event:default",
+    "core:webview:default",
+    "allow-get-providers",
+    "allow-get-prefs",
+    "allow-set-provider-enabled"
+  ],
   "webviews": ["chrome"],
   "windows": ["main"]
 }

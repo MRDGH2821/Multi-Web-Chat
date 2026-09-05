@@ -1,0 +1,14 @@
+[[permission]]
+identifier = "allow-get-providers"
+description = "Allow the get_providers command"
+commands.allow = ["get_providers"]
+
+[[permission]]
+identifier = "allow-get-prefs"
+description = "Allow the get_prefs command"
+commands.allow = ["get_prefs"]
+
+[[permission]]
+identifier = "allow-set-provider-enabled"
+description = "Allow the set_provider_enabled command"
+commands.allow = ["set_provider_enabled"]

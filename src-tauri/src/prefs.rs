@@ -34,6 +34,15 @@ pub fn set_enabled(prefs: &mut Prefs, id: &str, enabled: bool) {
     prefs.enabled.insert(id.to_string(), enabled);
 }
 
+/// Returns the ids of enabled providers, preserving registry order.
+pub fn enabled_provider_ids(prefs: &Prefs) -> Vec<String> {
+    all_providers()
+        .iter()
+        .filter(|p| is_enabled(prefs, p.id))
+        .map(|p| p.id.to_string())
+        .collect()
+}
+
 pub fn load_prefs(path: &Path) -> Result<Prefs, PrefsError> {
     if !path.exists() {
         return Ok(default_prefs());
@@ -72,7 +81,9 @@ pub fn prefs_path(config_dir: PathBuf) -> PathBuf {
 
 #[cfg(test)]
 mod tests {
-    use crate::prefs::{default_prefs, is_enabled, load_prefs, save_prefs, set_enabled};
+    use crate::prefs::{
+        default_prefs, enabled_provider_ids, is_enabled, load_prefs, save_prefs, set_enabled,
+    };
     use crate::registry::all_providers;
 
     #[test]
@@ -89,11 +100,7 @@ mod tests {
     fn unknown_keys_ignored_missing_keys_default_true() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("prefs.json");
-        std::fs::write(
-            &path,
-            r#"{"enabled":{"chatgpt":false,"unknown":true}}"#,
-        )
-        .unwrap();
+        std::fs::write(&path, r#"{"enabled":{"chatgpt":false,"unknown":true}}"#).unwrap();
         let prefs = load_prefs(&path).unwrap();
         assert!(!is_enabled(&prefs, "chatgpt"));
         assert!(is_enabled(&prefs, "claude")); // missing → true
@@ -109,5 +116,16 @@ mod tests {
         let loaded = load_prefs(&path).unwrap();
         assert!(!is_enabled(&loaded, "grok"));
         assert!(is_enabled(&loaded, "chatgpt"));
+    }
+
+    #[test]
+    fn enabled_ids_follow_registry_order() {
+        let mut prefs = default_prefs();
+        set_enabled(&mut prefs, "chatgpt", false);
+        set_enabled(&mut prefs, "grok", true);
+        let ids = enabled_provider_ids(&prefs);
+        assert_eq!(ids.first().map(String::as_str), Some("claude"));
+        assert_eq!(ids.last().map(String::as_str), Some("grok"));
+        assert!(!ids.iter().any(|i| i == "chatgpt"));
     }
 }

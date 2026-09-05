@@ -1,6 +1,6 @@
 use crate::layout::{compute_layout, CHROME_HEIGHT_DEFAULT};
-use crate::prefs::{is_enabled, load_prefs, prefs_path, Prefs};
-use crate::registry::all_providers;
+use crate::prefs::{enabled_provider_ids, load_prefs, prefs_path, Prefs};
+use crate::registry::provider;
 use std::path::PathBuf;
 use std::sync::Mutex;
 use tauri::{
@@ -47,11 +47,18 @@ pub fn create_main_shell(app: &AppHandle) -> tauri::Result<()> {
         .flatten()
         .unwrap_or_default();
 
+    let startup_ids = enabled_provider_ids(&prefs);
+
     app.manage(AppState {
         prefs: Mutex::new(prefs),
         chrome_height: Mutex::new(CHROME_HEIGHT_DEFAULT),
         living: Mutex::new(Vec::new()),
     });
+
+    for id in &startup_ids {
+        ensure_provider_webview(app, id)?;
+    }
+    reflow(app)?;
 
     let app_handle = app.clone();
     window.on_window_event(move |event| {
@@ -77,11 +84,7 @@ pub fn reflow(app: &AppHandle) -> tauri::Result<()> {
     let chrome_height = *state.chrome_height.lock().expect("chrome_height poisoned");
     let enabled_ids: Vec<String> = {
         let prefs = state.prefs.lock().expect("prefs poisoned");
-        all_providers()
-            .iter()
-            .filter(|p| is_enabled(&prefs, p.id))
-            .map(|p| p.id.to_string())
-            .collect()
+        enabled_provider_ids(&prefs)
     };
 
     let (width, height) = window_logical_size(&window)?;
@@ -136,4 +139,72 @@ pub fn session_dir(app: &AppHandle, provider_id: &str) -> tauri::Result<PathBuf>
         .join(provider_id);
     std::fs::create_dir_all(&base)?;
     Ok(base)
+}
+
+/// Creates (if not already living) the child webview for `provider_id`,
+/// loading its start URL with a persistent per-provider `data_directory`,
+/// and marks it as living. Does not reposition it — callers should follow
+/// up with [`reflow`].
+pub fn ensure_provider_webview(app: &AppHandle, provider_id: &str) -> tauri::Result<()> {
+    let state = app.state::<AppState>();
+    {
+        let living = state.living.lock().expect("living poisoned");
+        if living.contains(&provider_id.to_string()) {
+            return Ok(());
+        }
+    }
+
+    let Some(window) = app.get_window("main") else {
+        return Ok(());
+    };
+
+    let Some(p) = provider(provider_id) else {
+        return Ok(());
+    };
+
+    let data_dir = session_dir(app, provider_id)?;
+    let start_url = p
+        .start_url
+        .parse()
+        .expect("registry start_url must be a valid URL");
+    let builder = WebviewBuilder::new(provider_id, WebviewUrl::External(start_url))
+        .data_directory(data_dir)
+        .on_page_load(|_webview, _payload| {});
+
+    window.add_child(
+        builder,
+        LogicalPosition::new(0.0, 0.0),
+        LogicalSize::new(1.0, 1.0),
+    )?;
+
+    state
+        .living
+        .lock()
+        .expect("living poisoned")
+        .push(provider_id.to_string());
+
+    Ok(())
+}
+
+/// Closes the child webview for `provider_id` (if living) and removes it
+/// from the living set. Callers should follow up with [`reflow`].
+pub fn destroy_provider_webview(app: &AppHandle, provider_id: &str) -> tauri::Result<()> {
+    let state = app.state::<AppState>();
+    let was_living = {
+        let mut living = state.living.lock().expect("living poisoned");
+        if let Some(pos) = living.iter().position(|id| id == provider_id) {
+            living.remove(pos);
+            true
+        } else {
+            false
+        }
+    };
+
+    if was_living {
+        if let Some(webview) = app.get_webview(provider_id) {
+            webview.close()?;
+        }
+    }
+
+    Ok(())
 }
