@@ -182,7 +182,13 @@ pub async fn poll_last_result(
             })
             .map_err(|e| e.to_string())?;
 
-        match rx.recv_timeout(std::time::Duration::from_millis(200)) {
+        let recv_result = tokio::task::spawn_blocking(move || {
+            rx.recv_timeout(std::time::Duration::from_millis(200))
+        })
+        .await
+        .map_err(|e| e.to_string())?;
+
+        match recv_result {
             Ok(Ok(Some(raw))) => {
                 let parsed = serde_json::from_str::<LastResult>(&raw).map_err(|e| e.to_string())?;
                 return Ok(parsed);
