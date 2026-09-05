@@ -1,3 +1,4 @@
+mod prefs;
 mod registry;
 
 use tauri::Manager;
