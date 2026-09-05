@@ -255,13 +255,14 @@ fn request_last_result_js(
                 }
             };
             let script = HSTRING::from(LAST_RESULT_JS);
+            let handler_tx = tx.clone();
             let handler = ExecuteScriptCompletedHandler::create(Box::new(move |result, json| {
                 if let Err(e) = result {
-                    let _ = tx.send(Err(e.to_string()));
+                    let _ = handler_tx.send(Err(e.to_string()));
                 } else if json.is_empty() || json == "null" {
-                    let _ = tx.send(Ok(None));
+                    let _ = handler_tx.send(Ok(None));
                 } else {
-                    let _ = tx.send(Ok(Some(json)));
+                    let _ = handler_tx.send(Ok(Some(json)));
                 }
                 Ok(())
             }));
