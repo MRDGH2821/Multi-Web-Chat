@@ -19,8 +19,18 @@ jobs:
             rust_target: ""
           - args: ""
             artifact_path: src-tauri/target/release/bundle
+            name: linux-arm64
+            platform: ubuntu-24.04-arm
+            rust_target: ""
+          - args: ""
+            artifact_path: src-tauri/target/release/bundle
             name: windows-x64
             platform: windows-latest
+            rust_target: ""
+          - args: ""
+            artifact_path: src-tauri/target/release/bundle
+            name: windows-arm64
+            platform: windows-11-arm
             rust_target: ""
           - args: --target aarch64-apple-darwin
             artifact_path: src-tauri/target/aarch64-apple-darwin/release/bundle

@@ -51,8 +51,8 @@ and runs `linuxdeploy`/`appimagetool` at build time. If FUSE is unavailable
 Webviews use the system WebView2 runtime (preinstalled on current Windows 10
 and 11). The packaged installer downloads the Evergreen WebView2 bootstrapper
 if the runtime is missing. Build from a Windows host (or the Windows GitHub
-Actions runner) with the MSVC toolchain; this Linux workspace cannot emit
-`.msi` / NSIS artifacts.
+Actions x64 / arm64 runners) with the MSVC toolchain; this Linux workspace
+cannot emit `.msi` / NSIS artifacts.
 
 ### macOS
 
@@ -84,10 +84,12 @@ targets it can produce:
 - macOS: `src-tauri/target/release/bundle/{dmg,macos}/`
 
 Cross-platform installers are produced by `.github/workflows/tauri-build.yml`
-(pull request, `main`, version tags, or `workflow_dispatch`). Download the
-`multi-web-chat-windows-x64`, `multi-web-chat-macos-arm64`,
-`multi-web-chat-macos-x64`, and `multi-web-chat-linux-x64` artifacts from the
-workflow run.
+(pull request, `main`, version tags, or `workflow_dispatch`). Download these
+artifacts from the workflow run:
+
+- `multi-web-chat-linux-x64` / `multi-web-chat-linux-arm64`
+- `multi-web-chat-windows-x64` / `multi-web-chat-windows-arm64`
+- `multi-web-chat-macos-arm64` / `multi-web-chat-macos-x64`
 
 ## Recommendations
 
