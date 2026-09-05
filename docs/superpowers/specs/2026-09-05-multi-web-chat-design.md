@@ -8,7 +8,7 @@
 
 Users compare answers from several AI chat websites by copy-pasting the same prompt into each site. That is slow and error-prone.
 
-**Goal:** A Linux desktop “browser wrapper” that embeds the real AI chat websites (not APIs) and fans one prompt out to all enabled panes in parallel — the same product idea as [GodMode](https://github.com/smol-ai/GodMode) and [llm-god](https://github.com/czhou578/llm-god), implemented with Tauri instead of Electron.
+**Goal:** A desktop “browser wrapper” (Linux, Windows, and macOS) that embeds the real AI chat websites (not APIs) and fans one prompt out to all enabled panes in parallel — the same product idea as [GodMode](https://github.com/smol-ai/GodMode) and [llm-god](https://github.com/czhou578/llm-god), implemented with Tauri instead of Electron.
 
 Success for v1: a user can log in once per provider, toggle panes on/off, type one prompt, send it to every enabled site, start new chats across panes, and keep sessions across app restarts.
 
@@ -20,7 +20,7 @@ Explicitly out of scope for v1:
 - Global hotkey / system tray launcher
 - Prompt templates or saved prompt library
 - Response scraping, side-by-side compare, or auto-merge of answers
-- macOS or Windows builds
+- Signed Apple / Microsoft store distribution (CI produces unsigned Windows and macOS installers)
 - API / key-based chat mode (no provider APIs for sending chat)
 - Cloud sync of prefs or sessions
 - Local history of prompts sent from the chrome UI
@@ -33,9 +33,9 @@ Explicitly out of scope for v1:
 | Chat transport    | DOM automation via injected JS only — no chat APIs                                                                            |
 | UI chrome         | Svelte                                                                                                                        |
 | Shell             | Tauri v2 (not Electron, not Dioxus)                                                                                           |
-| Target OS         | Linux only                                                                                                                    |
-| Packages          | AppImage, `.deb`, `.rpm`; prefer a single-file binary when packaging allows                                                   |
-| System dependency | Document WebKitGTK (and related WebKit packages) as a runtime requirement for Tauri webviews on Linux                         |
+| Target OS         | Linux, Windows, and macOS                                                                                                     |
+| Packages          | Linux: AppImage, `.deb`, `.rpm`; Windows: `.msi` and NSIS; macOS: `.dmg`                                                      |
+| System dependency | Linux: WebKitGTK; Windows: WebView2; macOS: WKWebView                                                                         |
 | Layout            | **Layout A:** bottom chrome; when all 7 panes enabled use a 4+3 grid; when fewer are enabled, reflow into equal-width columns |
 
 ## 4. Providers (v1)
@@ -247,7 +247,7 @@ Automated end-to-end against live provider sites is not required for v1 (sites c
 
 ## 14. Implementation boundaries (for later planning)
 
-This spec intentionally stops at design. The next artifact should be an implementation plan covering: Tauri v2 + Svelte project scaffold, registry + prefs, multi-webview shell + layout, adapter stubs then per-provider adapters, Linux bundle targets, and README WebKitGTK notes.
+This spec intentionally stops at design. The next artifact should be an implementation plan covering: Tauri v2 + Svelte project scaffold, registry + prefs, multi-webview shell + layout, adapter stubs then per-provider adapters, desktop bundle targets (Linux / Windows / macOS), and README webview runtime notes.
 
 Do not expand v1 scope during planning without revisiting this document.
 
@@ -261,9 +261,9 @@ Do not expand v1 scope during planning without revisiting this document.
 - Desktop browser wrapper; no chat APIs
 - Tauri v2 + Svelte chrome (not Electron, not Dioxus)
 - Providers: ChatGPT, Claude, Gemini, Copilot, Z.AI, DeepSeek, Grok
-- Linux only: AppImage, deb, rpm; document WebKitGTK dependency
+- Desktop packages: Linux AppImage/deb/rpm, Windows MSI/NSIS, macOS DMG; document WebKitGTK, WebView2, and WKWebView
 - Features: toggles, New, Clear (prompt only), persist logins, multi-send
-- Non-goals: image paste, global hotkey, templates, scrape/compare, macOS/Windows, API mode
+- Non-goals: image paste, global hotkey, templates, scrape/compare, signed store distribution, API mode
 - Architecture: chrome webview + per-provider child webviews; Rust bounds; JS inject adapters; per-provider data dirs
 - Layout A: bottom chrome; 4+3 when all seven on; equal-column reflow otherwise
 - Destroy webview when disabled; empty prompt no-op; isolated per-pane errors
