@@ -5,6 +5,10 @@
 Linux desktop app (Tauri v2) that embeds multiple AI chat websites and sends
 one prompt to all enabled panes.
 
+International AI panes (screenshot order): ChatGPT, Claude, Copilot,
+Copilot (GH), Felo, Gemini, Genspark, Grok, Liner, Meta AI, Mistral,
+Perplexity, Poe, Qwen Chat, Z.ai. All 15 enabled uses a 5+5+5 grid.
+
 ## Runtime dependencies (Linux)
 
 Tauri webviews on Linux are backed by WebKitGTK, so the following system

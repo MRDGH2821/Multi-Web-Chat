@@ -125,7 +125,7 @@ mod tests {
         set_enabled(&mut prefs, "grok", true);
         let ids = enabled_provider_ids(&prefs);
         assert_eq!(ids.first().map(String::as_str), Some("claude"));
-        assert_eq!(ids.last().map(String::as_str), Some("grok"));
+        assert_eq!(ids.last().map(String::as_str), Some("zai"));
         assert!(!ids.iter().any(|i| i == "chatgpt"));
     }
 }

@@ -12,11 +12,19 @@ pub fn load_adapter_source(provider_id: &str) -> Result<&'static str, AdapterErr
     Ok(match provider_id {
         "chatgpt" => include_str!("../../adapters/chatgpt.js"),
         "claude" => include_str!("../../adapters/claude.js"),
-        "gemini" => include_str!("../../adapters/gemini.js"),
         "copilot" => include_str!("../../adapters/copilot.js"),
-        "zai" => include_str!("../../adapters/zai.js"),
-        "deepseek" => include_str!("../../adapters/deepseek.js"),
+        "copilot-gh" => include_str!("../../adapters/copilot-gh.js"),
+        "felo" => include_str!("../../adapters/felo.js"),
+        "gemini" => include_str!("../../adapters/gemini.js"),
+        "genspark" => include_str!("../../adapters/genspark.js"),
         "grok" => include_str!("../../adapters/grok.js"),
+        "liner" => include_str!("../../adapters/liner.js"),
+        "meta" => include_str!("../../adapters/meta-ai.js"),
+        "mistral" => include_str!("../../adapters/mistral.js"),
+        "perplexity" => include_str!("../../adapters/perplexity.js"),
+        "poe" => include_str!("../../adapters/poe.js"),
+        "qwen" => include_str!("../../adapters/qwen-chat.js"),
+        "zai" => include_str!("../../adapters/zai.js"),
         _ => return Err(AdapterError::UnknownProvider(provider_id.to_string())),
     })
 }
@@ -223,20 +231,16 @@ mod tests {
 
     #[test]
     fn load_adapter_source_returns_all_providers() {
-        for id in [
-            "chatgpt", "claude", "gemini", "copilot", "zai", "deepseek", "grok",
-        ] {
-            let src = load_adapter_source(id).expect("known provider");
+        for p in crate::registry::all_providers() {
+            let src = load_adapter_source(p.id).expect("known provider");
             assert!(src.contains("window.__mwcAdapter"));
         }
     }
 
     #[test]
     fn load_adapter_source_real_providers_have_no_stub_marker() {
-        for id in [
-            "chatgpt", "claude", "gemini", "copilot", "zai", "deepseek", "grok",
-        ] {
-            let src = load_adapter_source(id).expect("known provider");
+        for p in crate::registry::all_providers() {
+            let src = load_adapter_source(p.id).expect("known provider");
             assert!(!src.contains("stub:"));
         }
     }
