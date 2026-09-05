@@ -1,3 +1,4 @@
+mod adapter_runtime;
 mod commands;
 mod layout;
 mod prefs;

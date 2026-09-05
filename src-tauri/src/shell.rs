@@ -1,11 +1,12 @@
+use crate::adapter_runtime::load_adapter_source;
 use crate::layout::{compute_layout, CHROME_HEIGHT_DEFAULT};
 use crate::prefs::{enabled_provider_ids, load_prefs, prefs_path, Prefs};
 use crate::registry::provider;
 use std::path::PathBuf;
 use std::sync::Mutex;
 use tauri::{
-    webview::WebviewBuilder, AppHandle, LogicalPosition, LogicalSize, Manager, Rect, WebviewUrl,
-    WindowEvent,
+    webview::{PageLoadEvent, WebviewBuilder},
+    AppHandle, LogicalPosition, LogicalSize, Manager, Rect, WebviewUrl, WindowEvent,
 };
 
 /// Label used for the bottom chrome (toolbar) webview.
@@ -169,7 +170,13 @@ pub fn ensure_provider_webview(app: &AppHandle, provider_id: &str) -> tauri::Res
         .expect("registry start_url must be a valid URL");
     let builder = WebviewBuilder::new(provider_id, WebviewUrl::External(start_url))
         .data_directory(data_dir)
-        .on_page_load(|_webview, _payload| {});
+        .on_page_load(|webview, payload| {
+            if payload.event() == PageLoadEvent::Finished {
+                if let Ok(src) = load_adapter_source(webview.label()) {
+                    let _ = webview.eval(src);
+                }
+            }
+        });
 
     window.add_child(
         builder,
