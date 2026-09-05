@@ -1,3 +1,4 @@
+mod layout;
 mod prefs;
 mod registry;
 
