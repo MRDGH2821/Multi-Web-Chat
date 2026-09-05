@@ -1,0 +1,17 @@
+:root {
+  color-scheme: light;
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+}
+html,
+body,
+#app {
+  margin: 0;
+  height: 100%;
+}
+.chrome {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 8px 12px;
+  background: #1a1d21;
+  color: #e8eaed;
+}
