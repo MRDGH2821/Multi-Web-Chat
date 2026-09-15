@@ -19,16 +19,22 @@ pre_bump_hooks = [
 pre_package_bump_hooks = []
 # tombi: format.rules.array-values-order = "ascending"
 scopes = [
+  "adapters",
+  "chrome",
   "cocogitto",
   "copier",
   "cspell",
   "github",
   "hk",
   "jscpd",
+  "layout",
   "megalinter",
   "mise",
   "pre-commit",
+  "prefs",
   "prettier",
+  "shell",
+  "tauri",
   "treefmt",
   "version",
   "vscode",

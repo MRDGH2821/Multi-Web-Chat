@@ -2,6 +2,10 @@ amends "package://github.com/jdx/hk/releases/download/v1.56.1/hk@1.56.1#/Config.
 
 import "package://github.com/jdx/hk/releases/download/v1.56.1/hk@1.56.1#/Builtins.pkl"
 
+// Vendored third-party crate sources (see Cargo.toml [patch.crates-io]);
+// their formatting/style is upstream's concern, not ours.
+exclude = List("vendor/**")
+
 local linters = new Mapping<String, Step> {
   ["betterleaks"] = Builtins.betterleaks
   ["cspell"] {

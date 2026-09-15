@@ -164,6 +164,35 @@ For example:
 - Check tool documentation before asking the user for configuration details
 - Tools are managed by **mise**. Prefer `mise run <task>` over ad-hoc binaries when a task exists.
 
+## Cursor Cloud specific instructions
+
+This repository is currently a tooling scaffold (no application servers yet). A working Cloud Agent environment means the mise toolchain is installed and CI-equivalent checks pass.
+
+Bootstrap (idempotent):
+
+```sh
+./scripts/cloud-agent-install.sh
+```
+
+Or manually:
+
+```sh
+export PATH="$HOME/.local/bin:$PATH"
+command -v mise >/dev/null || curl -fsSL https://mise.run | sh
+eval "$(mise activate bash)"
+mise install
+mise run prepare
+mise run ai-setup
+```
+
+Validate like CI (`.github/workflows/mise-check.yml`):
+
+```sh
+mise run check
+```
+
+There is no long-running app to start. Node 22+ is required via mise (`cspell` needs Node `>=22.18.0`).
+
 ## Tooling
 
 ### mise & hk

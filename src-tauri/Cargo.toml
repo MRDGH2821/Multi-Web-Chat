@@ -1,0 +1,39 @@
+[package]
+authors = ["multi-web-chat"]
+description = "Linux multi-webview AI chat browser wrapper"
+edition = "2021"
+name = "multi-web-chat"
+version = "0.0.0"
+
+[lib]
+crate-type = ["cdylib", "rlib", "staticlib"]
+name = "multi_web_chat_lib"
+
+[dependencies]
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+tauri = { version = "2.11.5", features = ["unstable"] }
+tauri-plugin-log = "2.9.1"
+thiserror = "2.0.20"
+tokio = { version = "1.53.1", features = ["macros", "rt", "sync", "time"] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[build-dependencies]
+tauri-build = { version = "2.6.3", features = [] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+webkit2gtk = { version = "2.0.2", features = ["v2_40"] }
+
+# Vendored fixes for tauri-apps/tauri#15704 and tauri-apps/wry#1745 (Linux
+# gtk::Box packing bug that ignores add_child position/size). Remove once
+# these land in a released tauri-runtime-wry/wry version.
+[patch.crates-io]
+tauri-runtime-wry = { path = "../vendor/tauri-runtime-wry-2.11.4" }
+wry = { path = "../vendor/wry-0.55.1" }
+
+[profile.release]
+lto = true
+panic = "abort"
+codegen-units = 1
