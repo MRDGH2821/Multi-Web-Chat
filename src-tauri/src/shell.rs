@@ -25,7 +25,7 @@ pub struct AppState {
 pub fn create_main_shell(app: &AppHandle) -> tauri::Result<()> {
     let window = tauri::window::WindowBuilder::new(app, "main")
         .title("multi-web-chat")
-        .inner_size(1280.0, 800.0)
+        .inner_size(1600.0, 960.0)
         .build()?;
 
     let (width, height) = window_logical_size(&window)?;

@@ -22,7 +22,15 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "targets": ["appimage", "deb", "rpm"]
+    "macOS": {
+      "minimumSystemVersion": "10.15"
+    },
+    "targets": ["appimage", "deb", "dmg", "msi", "nsis", "rpm"],
+    "windows": {
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper"
+      }
+    }
   },
   "identifier": "dev.multiwebchat.app",
   "productName": "multi-web-chat",
