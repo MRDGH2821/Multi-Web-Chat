@@ -29,40 +29,6 @@ pub fn load_adapter_source(provider_id: &str) -> Result<&'static str, AdapterErr
     })
 }
 
-/// Returns the adapter IIFE source ready for `webview.eval` (source is already an IIFE).
-pub fn inject_adapter_script(source: &str) -> String {
-    source.to_string()
-}
-
-pub fn call_set_prompt_js(text: &str) -> String {
-    let t = serde_json::to_string(text).unwrap();
-    format!(
-        r#"(async()=>{{
-  const a=window.__mwcAdapter;
-  if(!a) throw new Error('adapter missing');
-  await a.setPrompt({t});
-}})()"#
-    )
-}
-
-pub fn call_submit_js() -> String {
-    r#"(async()=>{
-  const a=window.__mwcAdapter;
-  if(!a) throw new Error('adapter missing');
-  await a.submit();
-})()"#
-        .into()
-}
-
-pub fn call_new_chat_js() -> String {
-    r#"(async()=>{
-  const a=window.__mwcAdapter;
-  if(!a) throw new Error('adapter missing');
-  await a.newChat();
-})()"#
-        .into()
-}
-
 /// Trims `text` and returns `None` for an empty (or whitespace-only) prompt,
 /// so callers can treat it as a no-op without touching pane status.
 pub fn normalize_prompt(text: &str) -> Option<String> {
@@ -312,13 +278,6 @@ mod tests {
     fn empty_prompt_is_noop_guard() {
         assert!(normalize_prompt("  \n\t ").is_none());
         assert_eq!(normalize_prompt("hello").as_deref(), Some("hello"));
-    }
-
-    #[test]
-    fn set_prompt_js_escapes_quotes_and_newlines() {
-        let js = call_set_prompt_js("say \"hi\"\nthere");
-        assert!(js.contains("say \\\"hi\\\""));
-        assert!(js.contains("\\n"));
     }
 
     #[test]
