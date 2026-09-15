@@ -1,10 +1,10 @@
 {
   "extends": ["config:recommended"],
-  "rangeStrategy": "replace",
   "packageRules": [
     {
-      "semanticCommitType": "chore",
-      "matchPackageNames": ["*"]
+      "matchPackageNames": ["*"],
+      "semanticCommitType": "chore"
     }
-  ]
+  ],
+  "rangeStrategy": "replace"
 }

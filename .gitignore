@@ -3,11 +3,13 @@
 .agents/mcp_config.json
 .agents/skills
 .claude/skills
+.codex/config.toml
 .cursor/mcp.json
 .cursor/skills
 .github/skills
 .mcp.json
 .opencode/skills
+.superpowers
 .vscode/mcp.json
 apm_modules/
 opencode.json

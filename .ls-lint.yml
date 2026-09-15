@@ -5,7 +5,7 @@
 #   Rust       → snake_case   (Rust RFC 430 / API Guidelines)
 #   Python     → snake_case   (PEP 8)
 #   JavaScript → kebab-case   (eslint-plugin-unicorn default)
-#   TypeScript → snake_case   (Google TypeScript Style Guide)
+#   TypeScript → kebab-case   (align with JavaScript / eslint-plugin-unicorn)
 #   Java       → PascalCase   (Oracle Code Conventions — must match class name)
 # ── Ignored paths ─────────────────────────────────────────────────────────
 ignore:

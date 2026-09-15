@@ -1,5 +1,5 @@
 [files]
-yaml = ["*.yaml", "*.yml", ".yamllint"]
+yaml = ["*.yaml", "*.yml"]
 
 [rules]
 anchors = "enable"
@@ -13,7 +13,7 @@ float-values = "disable"
 hyphens = "enable"
 indentation = "enable"
 key-duplicates = "enable"
-key-ordering = "disable"
+key-ordering = "enable"
 new-line-at-end-of-file = "enable"
 octal-values = "disable"
 trailing-spaces = "enable"

@@ -10,58 +10,24 @@
 # See Cargo.toml.orig for the original contents.
 
 [package]
-edition = "2021"
-rust-version = "1.77.2"
-name = "tauri-runtime-wry"
-version = "2.11.4"
 authors = ["Tauri Programme within The Commons Conservancy"]
-build = "build.rs"
-exclude = [
-    "CHANGELOG.md",
-    "/target",
-]
-autolib = false
+autobenches = false
 autobins = false
 autoexamples = false
+autolib = false
 autotests = false
-autobenches = false
+build = "build.rs"
+categories = ["gui", "web-programming"]
 description = "Wry bindings to the Tauri runtime"
+edition = "2021"
+exclude = ["/target", "CHANGELOG.md"]
 homepage = "https://tauri.app/"
-readme = "README.md"
-categories = [
-    "gui",
-    "web-programming",
-]
 license = "Apache-2.0 OR MIT"
+name = "tauri-runtime-wry"
+readme = "README.md"
 repository = "https://github.com/tauri-apps/tauri"
-
-[features]
-common-controls-v6 = []
-dbus = ["tao/dbus"]
-default = [
-    "x11",
-    "dbus",
-]
-devtools = [
-    "wry/devtools",
-    "tauri-runtime/devtools",
-]
-macos-private-api = [
-    "wry/fullscreen",
-    "wry/transparent",
-    "tauri-runtime/macos-private-api",
-]
-macos-proxy = ["wry/mac-proxy"]
-objc-exception = []
-tracing = [
-    "dep:tracing",
-    "wry/tracing",
-]
-unstable = []
-x11 = [
-    "tao/x11",
-    "wry/x11",
-]
+rust-version = "1.77.2"
+version = "2.11.4"
 
 [lib]
 name = "tauri_runtime_wry"
@@ -78,8 +44,8 @@ version = "0.6"
 
 [dependencies.tao]
 version = "0.35.0"
-features = ["rwh_06"]
 default-features = false
+features = ["rwh_06"]
 
 [dependencies.tauri-runtime]
 version = "2.11.3"
@@ -96,12 +62,8 @@ version = "2"
 
 [dependencies.wry]
 version = "0.55.0"
-features = [
-    "protocol",
-    "os-webview",
-    "linux-body",
-]
 default-features = false
+features = ["linux-body", "os-webview", "protocol"]
 
 [target.'cfg(any(target_os = "linux", target_os = "dragonfly", target_os = "freebsd", target_os = "openbsd", target_os = "netbsd"))'.dependencies.gtk]
 version = "0.18"
@@ -119,16 +81,16 @@ version = "0.21"
 
 [target.'cfg(target_os = "macos")'.dependencies.objc2-app-kit]
 version = "0.3"
-features = [
-    "block2",
-    "NSApplication",
-    "NSResponder",
-    "NSView",
-    "NSWindow",
-    "NSScreen",
-    "NSGraphics",
-]
 default-features = false
+features = [
+  "NSApplication",
+  "NSGraphics",
+  "NSResponder",
+  "NSScreen",
+  "NSView",
+  "NSWindow",
+  "block2"
+]
 
 [target.'cfg(target_vendor = "apple")'.dependencies.objc2]
 version = "0.6"
@@ -145,7 +107,20 @@ version = "0.38"
 
 [target."cfg(windows)".dependencies.windows]
 version = "0.61"
-features = [
-    "Win32_Foundation",
-    "Win32_Graphics_Dwm",
+features = ["Win32_Foundation", "Win32_Graphics_Dwm"]
+
+[features]
+default = ["dbus", "x11"]
+common-controls-v6 = []
+dbus = ["tao/dbus"]
+devtools = ["tauri-runtime/devtools", "wry/devtools"]
+macos-private-api = [
+  "tauri-runtime/macos-private-api",
+  "wry/fullscreen",
+  "wry/transparent"
 ]
+macos-proxy = ["wry/mac-proxy"]
+objc-exception = []
+tracing = ["dep:tracing", "wry/tracing"]
+unstable = []
+x11 = ["tao/x11", "wry/x11"]

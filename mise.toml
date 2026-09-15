@@ -7,8 +7,7 @@ postinstall = ["hk install --mise"]
 
 [tasks]
 ai-setup = "apm install"
-check = ["hk check --all"]
-cspell = "cspell ."
+check = ["hk check --all", "cog check"]
 fmt = ["hk fix --all", "treefmt"]
 pre-commit = "hk run pre-commit"
 prepare = ["bun install"]

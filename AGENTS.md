@@ -78,16 +78,16 @@ Configuration lives in `apm.yml`. Do not skip this when skills or MCP tools are 
 
 ## Layout
 
-| Path                  | Purpose                                             |
-| --------------------- | --------------------------------------------------- |
-| `mise.toml`           | Tools, tasks, `hk install --mise` postinstall hook  |
-| `.config/hk.pkl`      | hk hook config (pre-commit, commit-msg, fix, check) |
-| `apm.yml`             | APM skills and MCP servers                          |
-| `cog.toml`            | Conventional-commit scopes and version bump hooks   |
-| `.mega-linter.yml`    | MegaLinter config                                   |
-| `.treefmt.toml`       | Full-tree formatter                                 |
-| `.config/cspell.json` | Spell-check dictionary                              |
-| `.agents/logs/`       | AI-assisted work logs                               |
+| Path                   | Purpose                                             |
+| ---------------------- | --------------------------------------------------- |
+| `mise.toml`            | Tools, tasks, `hk install --mise` postinstall hook  |
+| `.config/hk.pkl`       | hk hook config (pre-commit, commit-msg, fix, check) |
+| `apm.yml`              | APM skills and MCP servers                          |
+| `cog.toml`             | Conventional-commit scopes and version bump hooks   |
+| `.mega-linter.yml`     | MegaLinter config                                   |
+| `.config/treefmt.toml` | Full-tree formatter                                 |
+| `.config/cspell.json`  | Spell-check dictionary                              |
+| `.agents/logs/`        | AI-assisted work logs                               |
 
 ## Recommendations
 

@@ -1,4 +1,4 @@
-# :schema https://gist.githubusercontent.com/MRDGH2821/d61a45f6d91c94d1c9d3d1307036d361/raw/fe5c99a3237fa12ee6e0c247999832857d97d353/treefmt-schema.json
+# :schema https://schemastore.org/treefmt.json
 
 allow-missing-formatter = true
 
