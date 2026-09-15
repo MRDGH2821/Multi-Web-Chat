@@ -2,14 +2,16 @@
 
 [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/refs/heads/master/img/badge/black-badge.json)](https://github.com/copier-org/copier)
 
-Linux desktop app (Tauri v2) that embeds multiple AI chat websites and sends
-one prompt to all enabled panes.
+Desktop app (Tauri v2) that embeds multiple AI chat websites and sends one
+prompt to all enabled panes.
 
 International AI panes (screenshot order): ChatGPT, Claude, Copilot,
 Copilot (GH), Felo, Gemini, Genspark, Grok, Liner, Meta AI, Mistral,
 Perplexity, Poe, Qwen Chat, Z.ai. All 15 enabled uses a 5+5+5 grid.
 
-## Runtime dependencies (Linux)
+## Runtime dependencies
+
+### Linux
 
 Tauri webviews on Linux are backed by WebKitGTK, so the following system
 packages must be installed before running `tauri:dev` or `tauri:build`. These
@@ -44,6 +46,21 @@ Building an AppImage additionally requires a working FUSE mount
 and runs `linuxdeploy`/`appimagetool` at build time. If FUSE is unavailable
 (common in containers), the deb and rpm bundles still build successfully.
 
+### Windows
+
+Webviews use the system WebView2 runtime (preinstalled on current Windows 10
+and 11). The packaged installer downloads the Evergreen WebView2 bootstrapper
+if the runtime is missing. Build from a Windows host (or the Windows GitHub
+Actions x64 / arm64 runners) with the MSVC toolchain; this Linux workspace
+cannot emit `.msi` / NSIS artifacts.
+
+### macOS
+
+Webviews use WKWebView. Build from a macOS host (or the macOS GitHub Actions
+runner) for Apple Silicon and Intel. Unsigned local and CI builds will show a
+Gatekeeper warning until the app is signed with an Apple Developer
+certificate. This Linux workspace cannot emit `.dmg` / `.app` artifacts.
+
 ## Develop
 
 ```bash
@@ -58,9 +75,21 @@ bun run tauri:dev
 bun run tauri:build
 ```
 
-`src-tauri/tauri.conf.json` restricts `bundle.targets` to
-`["appimage", "deb", "rpm"]` (Linux only; no `msi`/`dmg`). Artifacts are
-written under `src-tauri/target/release/bundle/{appimage,deb,rpm}/`.
+`src-tauri/tauri.conf.json` `bundle.targets` is
+`["appimage", "deb", "dmg", "msi", "nsis", "rpm"]`. Each host builds only the
+targets it can produce:
+
+- Linux: `src-tauri/target/release/bundle/{appimage,deb,rpm}/`
+- Windows: `src-tauri/target/release/bundle/{msi,nsis}/`
+- macOS: `src-tauri/target/release/bundle/{dmg,macos}/`
+
+Cross-platform installers are produced by `.github/workflows/tauri-build.yml`
+(pull request, `main`, version tags, or `workflow_dispatch`). Download these
+artifacts from the workflow run:
+
+- `multi-web-chat-linux-x64` / `multi-web-chat-linux-arm64`
+- `multi-web-chat-windows-x64` / `multi-web-chat-windows-arm64`
+- `multi-web-chat-macos-arm64` / `multi-web-chat-macos-x64`
 
 ## Recommendations
 
