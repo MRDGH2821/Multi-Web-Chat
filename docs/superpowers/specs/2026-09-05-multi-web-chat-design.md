@@ -1,7 +1,7 @@
 # multi-web-chat — Design Spec
 
-**Date:** 2026-09-05  
-**Status:** Approved for implementation planning (pending user review of this written spec)  
+**Date:** 2026-09-05
+**Status:** Approved for implementation planning (pending user review of this written spec)
 **Product working name:** multi-web-chat
 
 ## 1. Problem and goal

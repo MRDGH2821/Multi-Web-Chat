@@ -56,23 +56,17 @@ Before substantive work, ensure project skills and MCP servers are installed.
 1. From the repository root, run `mise run ai-setup`, or:
 
    ```sh
-   apm install
-   ```
-
-   or, if `apm` is not on `PATH`:
-
-   ```sh
-   uvx --from apm-cli apm install
+   capa install
    ```
 
 2. **Reload the agent** (new chat / restart the agent session) so installed skills and MCP servers are picked up.
 
-Configuration lives in `apm.yml`. Do not skip this when skills or MCP tools are missing or stale.
+Configuration lives in `capabilities.yaml`. Do not skip this when skills or MCP tools are missing or stale.
 
 ## Project Context
 
 - **Project Type**: Project scaffolded from [copier-mr-mise](https://github.com/MRDGH2821/copier-mr-mise)
-- **Key Technologies**: mise, hk, MegaLinter, cspell, APM
+- **Key Technologies**: mise, hk, MegaLinter, cspell, capa
 - **Purpose**: Standardized starting point with tool management, git hooks, and quality checks
 - **Template updates**: `copier update` (review scripts in the template's `copier.yml`)
 
@@ -82,7 +76,7 @@ Configuration lives in `apm.yml`. Do not skip this when skills or MCP tools are 
 | ---------------------- | --------------------------------------------------- |
 | `mise.toml`            | Tools, tasks, `hk install --mise` postinstall hook  |
 | `.config/hk.pkl`       | hk hook config (pre-commit, commit-msg, fix, check) |
-| `apm.yml`              | APM skills and MCP servers                          |
+| `capabilities.yaml`    | Skills, MCP servers, and providers (capa)           |
 | `cog.toml`             | Conventional-commit scopes and version bump hooks   |
 | `.mega-linter.yml`     | MegaLinter config                                   |
 | `.config/treefmt.toml` | Full-tree formatter                                 |
@@ -246,7 +240,7 @@ docs: update AGENTS.md with guidelines
 chore(cspell): add technical terms to dictionary
 ```
 
-Version bumps use cocogitto (`cog bump`); pre-bump hooks update `package.json`, `apm.yml`, and `CHANGELOG.md` (git-cliff).
+Version bumps use cocogitto (`cog bump`); pre-bump hooks update `package.json` and `CHANGELOG.md` (git-cliff).
 
 ## Troubleshooting
 

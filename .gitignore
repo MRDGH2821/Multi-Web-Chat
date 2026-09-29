@@ -1,16 +1,25 @@
 # agents
+.agent-talk/
 .agent/skills
 .agents/mcp_config.json
 .agents/skills
+.claude/agents
+.claude/settings.json
 .claude/skills
+.codex/agents
 .codex/config.toml
+.cursor/agents
+.cursor/hooks.json
 .cursor/mcp.json
 .cursor/skills
+.gemini/settings.json
 .github/skills
 .mcp.json
+.opencode/agents
 .opencode/skills
 .superpowers
 .vscode/mcp.json
+apm.lock.yaml
 apm_modules/
 opencode.json
 
@@ -30,6 +39,7 @@ opencode.json
 .svelte-check/
 .svn
 .venv/
+.worktrees
 __MACOSX
 __pycache__
 dist/

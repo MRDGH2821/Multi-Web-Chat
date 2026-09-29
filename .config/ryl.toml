@@ -1,3 +1,14 @@
+# tombi: format.rules.array-values-order = "ascending"
+ignore = [
+  "**/*.lock",
+  "**/.mise/**",
+  "**/go.sum",
+  "**/locks/**",
+  "**/npm-shrinkwrap.json",
+  "**/package-lock.json",
+  "**/pnpm-lock.yaml"
+]
+
 [files]
 yaml = ["*.yaml", "*.yml"]
 

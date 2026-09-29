@@ -1,12 +1,16 @@
 # :schema https://schemastore.org/treefmt.json
 
 allow-missing-formatter = true
-
-[formatter.alejandra]
-command = "alejandra"
-includes = ["*.nix"]
-options = ["-q"]
-priority = 10
+# tombi: format.rules.array-values-order = "ascending"
+excludes = [
+  "**/*.lock",
+  "**/go.sum",
+  "**/locks/**",
+  "**/npm-shrinkwrap.json",
+  "**/package-lock.json",
+  "**/pnpm-lock.yaml",
+  ".mise/**"
+]
 
 [formatter.cspell-sort]
 command = "yq"
@@ -25,56 +29,13 @@ no-positional-arg-support = true
 options = ["-i", ".words|= sort_by(downcase)|.ignorePaths|=sort_by(downcase)"]
 priority = 9
 
-[formatter.ignore-files-formatter]
-command = "uvx"
+[formatter.jscpd-sort]
+command = "yq"
 # tombi: format.rules.array-values-order = "ascending"
-includes = ["**/.*ignore", ".*ignore"]
-options = ["git+https://github.com/lorenzwalthert/gitignore-tidy"]
-priority = 1
-
-[formatter.keep-sorted]
-command = "keep-sorted"
-includes = ["*"]
-priority = 10
-
-[formatter.nixfmt]
-command = "nixfmt"
-includes = ["*.nix"]
-priority = 1
-
-[formatter.pkl]
-command = "pkl"
-includes = ["*.pkl"]
-options = ["format", "-w", "."]
-
-[formatter.prettier]
-command = "bunx"
-# tombi: format.rules.array-values-order = "ascending"
-excludes = [
-  "*.*ignore",
-  "*.aac",
-  "*.docx",
-  "*.gitkeep",
-  "*.jinja",
-  "*.jpg",
-  "*.lock",
-  "*.mp4",
-  "*.nix",
-  "*.pdf",
-  "*.pkl",
-  "*.png",
-  "*.pptx",
-  "*.py",
-  "*.toml",
-  "*.txt",
-  "*.typ",
-  "LICENCE",
-  "LICENSE",
-  "justfile"
-]
-includes = ["*"]
-options = ["prettier", "--log-level", "error", "--write"]
-priority = 100
+includes = ["**/.jscpd*", "**/jscpd*", ".jscpd*", "jscpd*"]
+no-positional-arg-support = true
+options = ["-i", ".ignore|= sort_by(downcase)|.reporters|=sort_by(downcase)"]
+priority = 9
 
 [formatter.prettypst-default]
 command = "prettypst"
@@ -90,56 +51,11 @@ no-positional-arg-support = true
 options = ["-s", "otbs"]
 priority = 3
 
-[formatter.ruff-format]
-command = "uvx"
-excludes = []
-includes = ["*.py"]
-options = ["ruff", "format"]
-priority = 9
-
-[formatter.ruff-lint]
-command = "uvx"
-excludes = []
-includes = ["*.py"]
-options = ["ruff", "check", "--fix"]
-priority = 8
-
-[formatter.sort-markdown-tables]
-command = "smt"
-includes = ["*.md"]
-options = ["-i"]
-priority = 2
-
-[formatter.sort-package-json]
-command = "bunx"
-includes = ["package.json"]
-options = ["sort-package-json"]
-priority = 10
-
-[formatter.tombi-format]
-command = "uvx"
-includes = ["*.toml"]
-options = ["tombi", "format"]
-priority = 11
-
-[formatter.toml-sort]
-command = "uvx"
-includes = ["*.toml"]
-options = ["toml-sort", "-i", "--sort-table-keys", "--sort-inline-tables"]
-priority = 0
-
 [formatter.typstyle]
 command = "typstyle"
 includes = ["*.typ"]
 options = ["-i"]
 priority = 1
-
-[formatter.yamlfix]
-command = "uvx"
-# tombi: format.rules.array-values-order = "ascending"
-includes = ["*.yaml", "*.yml"]
-options = ["yamlfix"]
-priority = 8
 
 [formatter.yq-key-sort]
 command = "yq"

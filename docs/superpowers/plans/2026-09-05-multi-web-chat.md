@@ -142,7 +142,7 @@ Replace/extend `package.json` scripts and deps:
 }
 ```
 
-Run: `bun install`  
+Run: `bun install`
 Expected: lockfile updates; no install errors.
 
 - [ ] **Step 3: Add Vite + Svelte entry files**
@@ -175,12 +175,18 @@ export default defineConfig({
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <title>multi-web-chat</title>
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <script
+      type="module"
+      src="/src/main.ts"
+    ></script>
   </body>
 </html>
 ```
@@ -377,7 +383,7 @@ In `cog.toml` `scopes` array, add alphabetically:
 
 - [ ] **Step 7: Verify frontend build**
 
-Run: `bun run build`  
+Run: `bun run build`
 Expected: `dist/` produced; exit 0.
 
 - [ ] **Step 8: Verify Rust compiles (or record WebKit dep gap)**
@@ -450,7 +456,7 @@ mod tests {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd src-tauri && cargo test registry::tests::registry_has_seven_providers_in_spec_order -- --nocapture`  
+Run: `cd src-tauri && cargo test registry::tests::registry_has_seven_providers_in_spec_order -- --nocapture`
 Expected: FAIL (module/functions missing).
 
 - [ ] **Step 3: Implement registry**
@@ -528,7 +534,7 @@ export type ProviderId =
 
 - [ ] **Step 4: Run tests to verify pass**
 
-Run: `cd src-tauri && cargo test registry:: -- --nocapture`  
+Run: `cd src-tauri && cargo test registry:: -- --nocapture`
 Expected: PASS (2 tests).
 
 - [ ] **Step 5: Commit**
@@ -608,7 +614,7 @@ Add `tempfile` to `[dev-dependencies]` in `Cargo.toml`.
 
 - [ ] **Step 2: Run tests — expect FAIL**
 
-Run: `cd src-tauri && cargo test prefs:: -- --nocapture`  
+Run: `cd src-tauri && cargo test prefs:: -- --nocapture`
 Expected: FAIL (prefs module missing).
 
 - [ ] **Step 3: Implement prefs.rs**
@@ -689,7 +695,7 @@ pub fn prefs_path(config_dir: PathBuf) -> PathBuf {
 
 - [ ] **Step 4: Run tests — expect PASS**
 
-Run: `cd src-tauri && cargo test prefs:: -- --nocapture`  
+Run: `cd src-tauri && cargo test prefs:: -- --nocapture`
 Expected: all prefs tests PASS.
 
 - [ ] **Step 5: Commit**
@@ -782,7 +788,7 @@ fn chrome_height_clamped_to_max() {
 
 - [ ] **Step 2: Run tests — expect FAIL**
 
-Run: `cd src-tauri && cargo test layout:: -- --nocapture`  
+Run: `cd src-tauri && cargo test layout:: -- --nocapture`
 Expected: FAIL.
 
 - [ ] **Step 3: Implement layout.rs**
@@ -881,7 +887,7 @@ pub fn compute_layout(
 
 - [ ] **Step 4: Run tests — expect PASS**
 
-Run: `cd src-tauri && cargo test layout:: -- --nocapture`  
+Run: `cd src-tauri && cargo test layout:: -- --nocapture`
 Expected: all layout tests PASS.
 
 - [ ] **Step 5: Commit**
@@ -1538,7 +1544,7 @@ fn emit_status(app: &AppHandle, id: &str, status: PaneStatusKind, message: Optio
 
 - [ ] **Step 5: cargo test guards; manual fan-out**
 
-Run: `cd src-tauri && cargo test normalize_prompt -- --nocapture`  
+Run: `cd src-tauri && cargo test normalize_prompt -- --nocapture`
 Expected: PASS.
 
 Manual: with stubs, Send sets all enabled panes to `error` with stub messages in parallel. Empty prompt leaves statuses unchanged. Zero enabled panes: no events.
@@ -1723,7 +1729,7 @@ Style with compact flex CSS in `styles.css` (dark chrome bar, no card chrome).
 
 - [ ] **Step 3: Verify**
 
-Run: `bun run check` → no TS/Svelte errors.  
+Run: `bun run check` → no TS/Svelte errors.
 Run: `bun run tauri:dev` → toggles persist; Clear does not call Rust; Enter sends; Shift+Enter newline; statuses update on Send with stub errors.
 
 - [ ] **Step 4: Commit**

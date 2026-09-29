@@ -10,6 +10,7 @@
 # ── Ignored paths ─────────────────────────────────────────────────────────
 ignore:
   # keep-sorted start
+  - "**/target/**"
   - .git
   - .gradle
   - .pytest_cache
@@ -21,6 +22,7 @@ ignore:
   - node_modules
   - result # Nix build result symlink
   - target # Rust/Java build output
+  - vendor/**
   - venv
   # keep-sorted end
 ls:
