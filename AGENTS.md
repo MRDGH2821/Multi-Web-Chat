@@ -261,12 +261,13 @@ Version bumps use cocogitto (`cog bump`); pre-bump hooks update `package.json` a
 
 **`tauri:build` fails with `failed to run linuxdeploy` / `strip` errors on Linux:**
 
-- On distros with a newer glibc/binutils (e.g. bleeding-edge Fedora), the
+- On distros with a newer glibc/binutils (for example bleeding-edge Fedora), the
   prebuilt `linuxdeploy` AppImage bundles an old `strip` that can't parse the
-  `.relr.dyn` section in bundled system libraries.
-- Workaround: `mise run build` sets `NO_STRIP=1`, which skips linuxdeploy's
-  internal stripping step (slightly larger bundled libs, no functional
-  difference).
+  `.relr.dyn` section in bundled system libraries. Fedora's `appimagetool` also
+  exits when `ARCH` is unset and the AppDir contains more than one ELF class.
+- `scripts/tauri-build.sh` (used by `bun run tauri:build` and `mise run build`)
+  sets `NO_STRIP=1` and `ARCH` from `uname -m`. Skipping linuxdeploy's strip
+  step leaves bundled libraries slightly larger and does not change behavior.
 - Requires `glib2-devel gtk3-devel webkit2gtk4.1-devel libsoup3-devel
 librsvg2-devel` (or the Debian/Ubuntu equivalents already used in
   `.github/workflows/tauri-build.yml`) installed via the system package

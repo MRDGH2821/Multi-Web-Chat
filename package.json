@@ -9,7 +9,7 @@
     "dev": "vite",
     "preview": "vite preview",
     "tauri": "tauri",
-    "tauri:build": "tauri build",
+    "tauri:build": "bash scripts/tauri-build.sh",
     "tauri:dev": "tauri dev"
   },
   "dependencies": {

@@ -76,7 +76,7 @@ mise run dev
 mise run build
 ```
 
-`mise run compile` is the same task. The task sets `NO_STRIP=1` so linuxdeploy's bundled `strip` can bundle libraries built with newer binutils.
+`mise run compile` is the same task. Both commands run `scripts/tauri-build.sh`, which sets `NO_STRIP=1` and `ARCH` on Linux so AppImage bundling succeeds when system libraries use RELR relocations.
 
 `src-tauri/tauri.conf.json` `bundle.targets` is
 `["appimage", "deb", "dmg", "msi", "nsis", "rpm"]`. Each host builds only the
