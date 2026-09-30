@@ -15,6 +15,7 @@
   "singleQuote": false,
   "sortImports": true,
   "sortPackageJson": true,
+  "svelte": true,
   "tabWidth": 2,
   "trailingComma": "none",
   "useTabs": false

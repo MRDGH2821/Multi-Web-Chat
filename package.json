@@ -13,14 +13,14 @@
     "tauri:dev": "tauri dev"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2.11.1"
+    "@tauri-apps/api": "^2.11.1",
+    "svelte": "^5.57.1"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@tauri-apps/cli": "^2.11.4",
     "oxfmt": "^0.70.0",
     "prettier-plugin-svelte": "^4.1.1",
-    "svelte": "^5.57.0",
     "svelte-check": "^4.7.6",
     "typescript": "~6.0.3",
     "vite": "^8.3.0"

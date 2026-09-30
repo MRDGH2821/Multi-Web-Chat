@@ -805,6 +805,7 @@ uv = { path = ".mise/locks/pipx-toml-sort/0.25.0", digest = "sha256:9a7cfb709b9c
 version = "1.19.1"
 backend = "pipx:yamlfix"
 specifiers = ["latest"]
+uv = { path = ".mise/locks/pipx-yamlfix/1.19.1", digest = "sha256:cf5a355d65f61abdec824d8fb6ce513365636275fa62ba130eefad7aeff48999" }
 
 [[tools.pkl]]
 version = "0.32.1"

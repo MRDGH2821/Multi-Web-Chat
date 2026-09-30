@@ -47,6 +47,7 @@ local linters = new Mapping<String, Step> {
   ["toml-sort"] {
     fix = "toml-sort --in-place --sort-table-keys --sort-inline-tables {{files}}"
     check = "toml-sort --check --sort-table-keys --sort-inline-tables {{files}}"
+    exclude = List("**/Cargo.toml")
     types = List("toml")
   }
   ["trailing-whitespace"] = Builtins.trailing_whitespace
