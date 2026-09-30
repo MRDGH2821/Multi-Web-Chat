@@ -1702,9 +1702,18 @@ Concrete structure:
       onkeydown={onKeydown}
       placeholder="Prompt all enabled providers"
       rows="2"></textarea>
-    <button type="button" onclick={onSend}>Send</button>
-    <button type="button" onclick={() => newChatAll()}>New</button>
-    <button type="button" onclick={onClear}>Clear</button>
+    <button
+      type="button"
+      onclick={onSend}>Send</button
+    >
+    <button
+      type="button"
+      onclick={() => newChatAll()}>New</button
+    >
+    <button
+      type="button"
+      onclick={onClear}>Clear</button
+    >
   </div>
   <div class="status">
     {#if enabledCount() === 0}
