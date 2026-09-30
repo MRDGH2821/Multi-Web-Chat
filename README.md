@@ -76,7 +76,7 @@ mise run dev
 mise run build
 ```
 
-`mise run compile` is the same task. Both commands run `scripts/tauri-build.sh`, which sets `NO_STRIP=1` and `ARCH` on Linux so AppImage bundling succeeds when system libraries use RELR relocations.
+`mise run compile` is the same task. Both commands run `scripts/tauri-build.sh`, which sets `NO_STRIP=1` and `ARCH` on Linux so AppImage bundling succeeds when system libraries use RELR relocations. The script also removes bundled `libwayland` from the AppImage so newer Mesa (Fedora 44 and similar) does not abort with `EGL_BAD_PARAMETER`.
 
 `src-tauri/tauri.conf.json` `bundle.targets` is
 `["appimage", "deb", "dmg", "msi", "nsis", "rpm"]`. Each host builds only the

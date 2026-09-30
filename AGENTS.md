@@ -268,6 +268,11 @@ Version bumps use cocogitto (`cog bump`); pre-bump hooks update `package.json` a
 - `scripts/tauri-build.sh` (used by `bun run tauri:build` and `mise run build`)
   sets `NO_STRIP=1` and `ARCH` from `uname -m`. Skipping linuxdeploy's strip
   step leaves bundled libraries slightly larger and does not change behavior.
+  It also drops bundled `libwayland-*.so*` from the AppImage. The copy from
+  the Ubuntu runner makes Mesa 25+ (Fedora 44 and similar) abort with
+  `Could not create default EGL display: EGL_BAD_PARAMETER`.
+  `colorreload-gtk-module` / `window-decorations-gtk-module` warnings are KDE
+  and are harmless.
 - Requires `glib2-devel gtk3-devel webkit2gtk4.1-devel libsoup3-devel
 librsvg2-devel` (or the Debian/Ubuntu equivalents already used in
   `.github/workflows/tauri-build.yml`) installed via the system package
