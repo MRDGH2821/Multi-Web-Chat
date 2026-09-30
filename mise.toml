@@ -16,6 +16,20 @@ ai-setup = "capa install --yes"
 check = ["hk check --all", "cog check"]
 prepare = ["bun install"]
 
+[tasks.build]
+alias = "compile"
+depends = ["prepare"]
+description = "Compile and bundle the desktop app"
+# linuxdeploy's bundled strip fails on newer binutils; see AGENTS.md
+env = { NO_STRIP = "1" }
+run = "bun run tauri:build"
+
+[tasks.dev]
+alias = "start"
+depends = ["prepare"]
+description = "Start the desktop app in dev mode"
+run = "bun run tauri:dev"
+
 [tasks.format]
 alias = "fmt"
 run = [{ task = "treefmt" }, "hk fix --all"]

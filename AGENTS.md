@@ -264,8 +264,9 @@ Version bumps use cocogitto (`cog bump`); pre-bump hooks update `package.json` a
 - On distros with a newer glibc/binutils (e.g. bleeding-edge Fedora), the
   prebuilt `linuxdeploy` AppImage bundles an old `strip` that can't parse the
   `.relr.dyn` section in bundled system libraries.
-- Workaround: `NO_STRIP=1 bun run tauri:build` skips linuxdeploy's internal
-  stripping step (slightly larger bundled libs, no functional difference).
+- Workaround: `mise run build` sets `NO_STRIP=1`, which skips linuxdeploy's
+  internal stripping step (slightly larger bundled libs, no functional
+  difference).
 - Requires `glib2-devel gtk3-devel webkit2gtk4.1-devel libsoup3-devel
 librsvg2-devel` (or the Debian/Ubuntu equivalents already used in
   `.github/workflows/tauri-build.yml`) installed via the system package

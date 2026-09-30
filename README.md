@@ -65,15 +65,18 @@ certificate. This Linux workspace cannot emit `.dmg` / `.app` artifacts.
 
 ```bash
 mise install
-bun install
-bun run tauri:dev
+mise run dev
 ```
+
+`mise run start` is the same task.
 
 ## Build packages
 
 ```bash
-bun run tauri:build
+mise run build
 ```
+
+`mise run compile` is the same task. The task sets `NO_STRIP=1` so linuxdeploy's bundled `strip` can bundle libraries built with newer binutils.
 
 `src-tauri/tauri.conf.json` `bundle.targets` is
 `["appimage", "deb", "dmg", "msi", "nsis", "rpm"]`. Each host builds only the
