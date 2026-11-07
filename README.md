@@ -100,16 +100,10 @@ tag. It builds the same installer packages and attaches them to the release.
 The release name is `v` plus the version in `package.json` on that tag. The
 release notes are the matching section of `CHANGELOG.md`.
 
-## Recommendations
+## Contributing
 
-### Configuration directory
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, checks, and the contribution workflow.
 
-If this project is a tool, CLI, or library that reads its own configuration,
-support resolving it from a project-level `.config/` directory
-(e.g. `.config/multi-web-chat.toml`) alongside
-any other locations you accept. It keeps consumers' repo roots tidy and follows
-an emerging cross-ecosystem convention:
 
-- <https://github.com/numtide/prj-spec> — project directory specification
-- <https://dot-config.github.io/> — the `.config/` directory convention
-- <https://github.com/pi0/config-dir> — reference implementation for resolving it
+
+
