@@ -87,12 +87,18 @@ targets it can produce:
 - macOS: `src-tauri/target/release/bundle/{dmg,macos}/`
 
 Cross-platform installers are produced by `.github/workflows/tauri-build.yml`
-(pull request, `main`, version tags, or `workflow_dispatch`). Download these
-artifacts from the workflow run:
+(pull request, `main`, or `workflow_dispatch`). Download these artifacts
+from the workflow run:
 
 - `multi-web-chat-linux-x64` / `multi-web-chat-linux-arm64`
 - `multi-web-chat-windows-x64` / `multi-web-chat-windows-arm64`
 - `multi-web-chat-macos-arm64` / `multi-web-chat-macos-x64`
+
+`.github/workflows/release.yml` creates a GitHub Release for a version tag.
+It runs when a `v*` tag is pushed, and you can also run it by hand with that
+tag. It builds the same installer packages and attaches them to the release.
+The release name is `v` plus the version in `package.json` on that tag. The
+release notes are the matching section of `CHANGELOG.md`.
 
 ## Recommendations
 
