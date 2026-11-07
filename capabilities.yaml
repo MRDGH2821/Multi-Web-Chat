@@ -34,15 +34,11 @@ plugins:
     id: megalinter
     type: github
 
-
   - def:
       description: Frontend design taste skills including brutalist, minimalist, soft, redesign, stitch, and more
       repo: Leonxlnx/taste-skill
     id: taste-skill
     type: github
-
-
-
 
 providers:
   # keep-sorted start

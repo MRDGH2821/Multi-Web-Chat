@@ -103,7 +103,3 @@ release notes are the matching section of `CHANGELOG.md`.
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, checks, and the contribution workflow.
-
-
-
-

@@ -150,8 +150,8 @@ Expected: lockfile updates; no install errors.
 `vite.config.ts`:
 
 ```ts
-import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { defineConfig } from "vite";
 
 const host = process.env.TAURI_DEV_HOST;
 
@@ -196,6 +196,7 @@ export default defineConfig({
 ```ts
 import "./styles.css";
 import { mount } from "svelte";
+
 import App from "./App.svelte";
 
 mount(App, { target: document.getElementById("app")! });
@@ -529,7 +530,13 @@ Mirror ids/labels in `src/lib/providers.ts`. Add `src/lib/types.ts`:
 ```ts
 export type PaneStatus = "idle" | "sending" | "ok" | "error";
 export type ProviderId =
-  "chatgpt" | "claude" | "gemini" | "copilot" | "zai" | "deepseek" | "grok";
+  | "chatgpt"
+  | "claude"
+  | "gemini"
+  | "copilot"
+  | "zai"
+  | "deepseek"
+  | "grok";
 ```
 
 - [ ] **Step 4: Run tests to verify pass**
@@ -1582,6 +1589,7 @@ EOF
 ```ts
 import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
+
 import type { PaneStatus, ProviderId } from "./types";
 
 export type Prefs = { enabled: Record<string, boolean> };
@@ -2251,7 +2259,7 @@ Expected: all unit tests PASS; svelte-check clean.
 ## Self-Review Notes (author)
 
 1. **Spec coverage:** §§3–11,14 mapped to Tasks 1–12; §5 features → Tasks 6–9; §8 adapters → Tasks 7/10/11; §11 packaging → Task 12; §12 testing → unit tasks + Task 13 checklist; non-goals (§2) excluded; security (§13) inherited (local adapters, no APIs).
-2. **Placeholder scan:** Removed unused `clamp_chrome` and ambiguous eval bridges; locked Linux `webkit2gtk` poll for adapter results. Remaining “during implementation” notes only cover distro package name verification (explicitly deferred by the design spec §11).
+2. **Placeholder scan:** Removed unused `clamp_chrome` and ambiguous eval bridges; locked Linux `webkit2gtk` poll for adapter results. Remaining "during implementation" notes only cover distro package name verification (explicitly deferred by the design spec §11).
 3. **Type consistency:** Provider ids, `PaneStatus`/`PaneStatusKind`, prefs `{ enabled }`, commands `get_providers` / `get_prefs` / `set_provider_enabled` / `send_prompt` / `new_chat_all`, event `pane_status`, webview labels `chrome` + provider id are aligned across Rust and Svelte tasks.
 4. **Scope:** Single plan (one shippable Linux app). Adapters are sequenced after shell so each task still yields a testable increment.
 5. **Risk gate:** Task 5 Linux absolute-position smoke must pass before toggles/adapters; documents known GTK multiwebview packing issue.

@@ -8,7 +8,7 @@
 
 Users compare answers from several AI chat websites by copy-pasting the same prompt into each site. That is slow and error-prone.
 
-**Goal:** A desktop “browser wrapper” (Linux, Windows, and macOS) that embeds the real AI chat websites (not APIs) and fans one prompt out to all enabled panes in parallel — the same product idea as [GodMode](https://github.com/smol-ai/GodMode) and [llm-god](https://github.com/czhou578/llm-god), implemented with Tauri instead of Electron.
+**Goal:** A desktop "browser wrapper" (Linux, Windows, and macOS) that embeds the real AI chat websites (not APIs) and fans one prompt out to all enabled panes in parallel — the same product idea as [GodMode](https://github.com/smol-ai/GodMode) and [llm-god](https://github.com/czhou578/llm-god), implemented with Tauri instead of Electron.
 
 Success for v1: a user can log in once per provider, toggle panes on/off, type one prompt, send it to every enabled site, start new chats across panes, and keep sessions across app restarts.
 
@@ -60,7 +60,7 @@ Minimal surface:
 
 1. **Pane toggles** — enable/disable each provider independently; prefs persist on disk.
 2. **Multi-send** — one shared prompt; Send fans out to all currently enabled panes in parallel.
-3. **New chat** — invoke each enabled pane’s `newChat` adapter action (fresh conversation on that site).
+3. **New chat** — invoke each enabled pane's `newChat` adapter action (fresh conversation on that site).
 4. **Clear** — clear the shared chrome prompt field only (does not wipe provider conversations). Label in UI: **Clear**.
 5. **Persist logins** — each provider webview uses its own `data_directory` so cookies/local storage survive restarts.
 6. **Per-pane status** — chrome shows idle / sending / success / error per provider for the latest send (and load failures when creating a pane).
@@ -111,7 +111,7 @@ Separate webviews give isolated cookie jars (`data_directory` per provider), ind
 
 ### 6.4 Enable / disable lifecycle
 
-- **Enable:** create webview with that provider’s URL and `data_directory`; inject adapter after load (or on `dom-ready` equivalent); reflow.
+- **Enable:** create webview with that provider's URL and `data_directory`; inject adapter after load (or on `dom-ready` equivalent); reflow.
 - **Disable:** destroy the webview immediately to free RAM; keep prefs and on-disk session data so re-enable restores login; reflow.
 - Destroyed panes do not receive Send / New.
 
@@ -122,7 +122,7 @@ Separate webviews give isolated cookie jars (`data_directory` per provider), ind
 | **Shell**             | Rust (Tauri)                                 | Main window; create/destroy/bounds of chrome + provider webviews; layout math; command handlers; emit status events |
 | **Chrome UI**         | Svelte                                       | Prompt textarea, provider toggles, Send / New / Clear, per-pane status display; calls Tauri commands                |
 | **Provider registry** | Rust (+ shared constants usable from Svelte) | Ordered list of id, label, start URL, adapter script path                                                           |
-| **Inject adapters**   | Per-provider JS                              | DOM helpers: `setPrompt`, `submit`, `newChat`; loaded into that provider’s webview only                             |
+| **Inject adapters**   | Per-provider JS                              | DOM helpers: `setPrompt`, `submit`, `newChat`; loaded into that provider's webview only                             |
 | **Session store**     | OS filesystem via webview `data_directory`   | Cookies / site storage per provider — not a custom DB                                                               |
 | **Prefs store**       | Rust, on-disk JSON                           | Which panes are enabled only; chrome height is not persisted (runtime default 96px, cap 140px); no prompt history   |
 
@@ -160,7 +160,7 @@ Each adapter is a JS module (or IIFE) evaluated in the provider webview. It must
 type PaneStatus = "idle" | "sending" | "ok" | "error";
 
 interface MwcAdapter {
-  /** Put text into the site’s composer. Must not submit. */
+  /** Put text into the site's composer. Must not submit. */
   setPrompt(text: string): Promise<void> | void;
   /** Submit the current composer contents (click send / Enter as appropriate). */
   submit(): Promise<void> | void;
@@ -210,7 +210,7 @@ Rust orchestration always: `setPrompt(text)` then `submit()` for Send; only `new
 | Case                           | Behavior                                                                                     |
 | ------------------------------ | -------------------------------------------------------------------------------------------- |
 | Empty / whitespace-only prompt | Send is a no-op                                                                              |
-| Zero panes enabled             | Send / New are no-ops; chrome may show a single hint string (“Enable at least one provider”) |
+| Zero panes enabled             | Send / New are no-ops; chrome may show a single hint string ("Enable at least one provider") |
 | Adapter failure                | That pane → `error`; others continue                                                         |
 | Webview crash / load failure   | Pane → `error`; user can toggle off/on to recreate                                           |
 | Site DOM change breaks adapter | Same as adapter failure; fix is an adapter update (expected maintenance)                     |
@@ -240,7 +240,7 @@ Automated end-to-end against live provider sites is not required for v1 (sites c
 
 ## 13. Security and privacy notes
 
-- No chat APIs and no shipping of prompts to infrastructure we control — prompts go only into the user’s loaded provider pages.
+- No chat APIs and no shipping of prompts to infrastructure we control — prompts go only into the user's loaded provider pages.
 - Separate data directories reduce cross-provider cookie leakage.
 - Injected scripts are local app assets, not remote-loaded.
 - Users should treat the app with the same trust as a browser profile holding AI-site logins.

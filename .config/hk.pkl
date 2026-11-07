@@ -127,10 +127,10 @@ exclude =
     "**/npm-shrinkwrap.json",
     "**/package-lock.json",
     "**/pnpm-lock.yaml",
-    "LICENSE",
-    "vendor/**",
     "AGENTS.md",
-    "CLAUDE.md"
+    "CLAUDE.md",
+    "LICENSE",
+    "vendor/**"
     // keep-sorted end
   )
 
