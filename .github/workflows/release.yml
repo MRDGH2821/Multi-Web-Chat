@@ -1,0 +1,80 @@
+---
+concurrency:
+  cancel-in-progress: false
+  group: release-${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+jobs:
+  packages:
+    name: Build packages
+    permissions:
+      contents: read
+    uses: ./.github/workflows/tauri-packages.yml
+    with:
+      ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+      require-bundles: true
+  release:
+    env:
+      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+    name: Create GitHub release
+    needs: packages
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout version tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ env.RELEASE_TAG }}
+      - id: notes
+        name: Read version and changelog
+        run: |
+          python3 scripts/release_notes.py \
+            --github-output "$GITHUB_OUTPUT" \
+            --notes release-notes.md \
+            --tag "$RELEASE_TAG"
+      - name: Download packages
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          path: packages
+          pattern: multi-web-chat-*
+      - name: Collect package files
+        run: python3 scripts/release_assets.py --source packages --dest release-assets
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          PRERELEASE: ${{ steps.notes.outputs.prerelease }}
+          TAG: ${{ steps.notes.outputs.tag }}
+        name: Publish GitHub release
+        run: |
+          mapfile -d '' -t assets < <(find release-assets -type f -print0 | sort -z)
+          if [ "${#assets[@]}" -eq 0 ]; then
+            echo "No release packages were produced"
+            exit 1
+          fi
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "${assets[@]}" --clobber
+          else
+            if [ "$PRERELEASE" = "true" ]; then
+              gh release create "$TAG" "${assets[@]}" \
+                --notes-file release-notes.md \
+                --prerelease \
+                --title "$TAG" \
+                --verify-tag
+            else
+              gh release create "$TAG" "${assets[@]}" \
+                --notes-file release-notes.md \
+                --title "$TAG" \
+                --verify-tag
+            fi
+          fi
+name: Release
+on: # yamllint disable-line rule:truthy
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Version tag to release (for example v0.1.0)
+        required: true
+        type: string
+permissions: {}
